@@ -21,16 +21,16 @@ GRAPH_PARAMETERS = {
 
 def create_mode(samples, x=None, y=None, mean=None, std_dev=None):
     if not x:
-        x = np.random.random() * 8 + 1
+        x = np.random.random() * 0.8 + 0.1
 
     if not y:
-        y = np.random.random() * 8 + 1
+        y = np.random.random() * 0.8 + 0.1
 
     if not mean:
-        mean = np.random.random() * 2 - 1
+        mean = np.random.random() * 0.2 - 0.1
 
     if not std_dev:
-        std_dev = 0.07 #np.random.random() / 3
+        std_dev = 0.007
 
     samples = np.random.normal(mean, std_dev, (samples, 2))
 
@@ -61,69 +61,75 @@ app.layout = html.Div(
     className="root",
     children=[
         html.H1(children="Artificial Intelligence Fundamentals Laboratory - Michal Okrasa CS 227422"),
-        dcc.Graph(
-            id="graph"
-        ),
         html.Div(
-            className="inputs-container",
+            className="main-container",
             children=[
-                html.Div(
-                    className="class-inputs",
-                    children=[
-                        html.H2(
-                            id="header-a",
-                            children="Class A"
-                        ),
-                        html.Label("Number of modes:"),
-                        dcc.Input(
-                            className="input",
-                            id="a-modes",
-                            type="number",
-                            value=GRAPH_PARAMETERS["class_a"]["modes"],
-                            debounce=True
-                        ),
-                        html.Label("Number of samples per mode:"),
-                        dcc.Input(
-                            className="input",
-                            id="a-samples",
-                            type="number",
-                            value=GRAPH_PARAMETERS["class_a"]["samples"],
-                            debounce=True
-                        )
-                    ]
+                dcc.Graph(
+                    id="graph"
                 ),
                 html.Div(
-                    className="class-inputs",
+                    className="inputs-container",
                     children=[
-                        html.H2(
-                            id="header-b",
-                            children="Class B"
+                        html.Div(
+                            className="class-inputs",
+                            children=[
+                                html.H2(
+                                    id="header-a",
+                                    children="Class A"
+                                ),
+                                html.Label("Number of modes:"),
+                                dcc.Input(
+                                    className="input",
+                                    id="a-modes",
+                                    type="number",
+                                    value=GRAPH_PARAMETERS["class_a"]["modes"],
+                                    debounce=True
+                                ),
+                                html.Label("Number of samples per mode:"),
+                                dcc.Input(
+                                    className="input",
+                                    id="a-samples",
+                                    type="number",
+                                    value=GRAPH_PARAMETERS["class_a"]["samples"],
+                                    debounce=True
+                                )
+                            ]
                         ),
-                        html.Label("Number of modes:"),
-                        dcc.Input(
-                            className="input",
-                            id="b-modes",
-                            type="number",
-                            value=GRAPH_PARAMETERS["class_b"]["modes"],
-                            debounce=True
+                        html.Div(
+                            className="class-inputs",
+                            children=[
+                                html.H2(
+                                    id="header-b",
+                                    children="Class B"
+                                ),
+                                html.Label("Number of modes:"),
+                                dcc.Input(
+                                    className="input",
+                                    id="b-modes",
+                                    type="number",
+                                    value=GRAPH_PARAMETERS["class_b"]["modes"],
+                                    debounce=True
+                                ),
+                                html.Label("Number of samples per mode:"),
+                                dcc.Input(
+                                    className="input",
+                                    id="b-samples",
+                                    type="number",
+                                    value=GRAPH_PARAMETERS["class_b"]["samples"],
+                                    debounce=True
+                                )
+                            ]
                         ),
-                        html.Label("Number of samples per mode:"),
-                        dcc.Input(
-                            className="input",
-                            id="b-samples",
-                            type="number",
-                            value=GRAPH_PARAMETERS["class_b"]["samples"],
-                            debounce=True
+                        html.Button(
+                            id="update-button",
+                            children="Update",
+                            n_clicks=0
                         )
                     ]
                 )
             ]
         ),
-        html.Button(
-            id="update-button",
-            children="Update",
-            n_clicks=0
-        )
+        
     ]
 )
 
@@ -167,7 +173,9 @@ def update_graph(n_clicks, a_samples, b_samples, a_modes, b_modes):
     
         return fig
 
-    fig = go.Figure()
+    fig = go.Figure(
+        layout=go.Layout(autosize=True)
+    )
     fig.add_trace(generate_trace(GRAPH_PARAMETERS["class_a"], new_data=True))
     fig.add_trace(generate_trace(GRAPH_PARAMETERS["class_b"], new_data=True))
 
